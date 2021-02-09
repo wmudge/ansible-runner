@@ -2,6 +2,8 @@ FROM quay.io/ansible/ansible-runner:stable-2.10-devel
 
 ARG BUILD_DATE
 ARG IMAGE_FULL_NAME
+ARG CACHE_PYTHON=1
+ARG CACHE_ANSIBLE=1
 
 # Metadata
 LABEL maintainer="Cloudera Labs <cloudera-labs@cloudera.com>" \
@@ -35,6 +37,7 @@ RUN dnf install -y \
     && ln -fs /usr/bin/python3 /usr/bin/python
 
 ## Install Python Dependencies
+RUN [[ ${CACHE_PYTHON} ]] && echo "Python set to cache" || echo "Python set to no-cache"
 COPY deps/python.txt deps-python.txt
 RUN pip install --upgrade pip \
     && pip install --no-cache-dir -r deps-python.txt
@@ -44,6 +47,7 @@ RUN pip install --upgrade pip \
 RUN pip install git+git://github.com/cloudera-labs/cdpy@main#egg=cdpy
 
 ## Install Ansible Dependencies
+RUN [[ ${CACHE_ANSIBLE} ]] && echo "Ansible set to cache" || echo "Ansible set to no-cache"
 COPY deps/ansible.yml deps-ansible.yml
 RUN ansible-galaxy install -r deps-ansible.yml
 

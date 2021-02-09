@@ -9,6 +9,9 @@ collections:
   - google.cloud
   - azure.azcollection
   - netapp.azure
+  - name: https://github.infra.cloudera.com/GOES/cloudera.exe.git
+    type: git
+    version: devel
 
 # Append other roles to this list.
 roles:

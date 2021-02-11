@@ -17,7 +17,9 @@ LABEL maintainer="Cloudera Labs <cloudera-labs@cloudera.com>" \
       org.label-schema.schema-version="1.0"
 
 # Handle additional repo information
-RUN rpm --import https://packages.microsoft.com/keys/microsoft.asc
+RUN rpm --import https://packages.microsoft.com/keys/microsoft.asc \
+    && dnf install -y dnf-plugins-core \
+    && dnf config-manager --add-repo https://rpm.releases.hashicorp.com/RHEL/hashicorp.repo
 COPY deps/google-cloud-sdk.repo /etc/yum.repos.d/google-cloud-sdk.repo
 COPY deps/azure-cli.repo /etc/yum.repos.d/azure-cli.repo
 COPY deps/kubernetes.repo /etc/yum.repos.d/kubernetes.repo
@@ -33,6 +35,7 @@ RUN dnf install -y \
     google-cloud-sdk \
     azure-cli \
     kubectl \
+    terraform \
     && rm -rf /var/cache/dnf \
     && ln -fs /usr/bin/python3 /usr/bin/python
 
